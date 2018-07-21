@@ -16,6 +16,10 @@ socket.on("connect", function () {
           // newMessage listener
         socket.on("welcome", function (message) { 
             console.log("message from local server", message)
+            let li = jQuery("<li></li>"); 
+            li.text(`${message.from}: ${message.text}`);
+
+            jQuery(`#messages`).append(li);
         })  
 
         socket.on("userJoin", function (message) { 
@@ -39,6 +43,31 @@ socket.on("connect", function () {
         //     console.log("from server: ", data)
         // });
 
+
+    jQuery("#message-form").on("submit", function (event) { 
+        event.preventDefault();
+        socket.emit("createMessage", { 
+            from:"User",
+            text: jQuery("[name=message]").val()
+        }, function(){ 
+
+        });
+    });
+
+    let locationButton = jQuery("#send-location") 
+    locationButton.on("click", function() { 
+        if(!navigator.geolocation){ 
+            return alert("Geolocation failed on browser")
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            function(position){ 
+            console.log(position);
+            }, 
+            function (){ 
+            alert("Unable to fetch location")
+            })
+    });
 });
 
 
@@ -48,14 +77,5 @@ socket.on("disconnect", function (){
 })
 
 
-jQuery("#message-form").on("submit", function (event) { 
-    event.preventDefault();
-    socket.emit("createMessage", { 
-        from:"User",
-        text: jQuery("[name=message]").val()
-    }, function(){ 
-
-    });
-});
 
 
