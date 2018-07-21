@@ -9,7 +9,8 @@ const publicPath= path.join(__dirname, "../public");
 const app = express();
 const port = process.env.PORT || 3000;
 
-
+// units 
+const {generateMessage} =require("./unit/message"); 
 // adding entry for incomine socket. connection 
 // server accept connection
 // client make connection
@@ -35,18 +36,27 @@ var datestring = new Date().toLocaleString();
 // listen for event 
 io.on('connection', (socket) => {
     // emmit to all users above the emmiter
-    socket.broadcast.emit("userJoin", { 
-        from: "admin",
-        text: "new user join",
-        date: datestring
-    })
+    socket.broadcast.emit("userJoin",
+    generateMessage("admin", "new user join")
+    // { 
+    //     from: "admin",
+    //     text: "new user join",
+    //     date: datestring
+    // }
+)
+
+
 
     // event returned exclusively to emmiter 
-    socket.emit('welcome', { 
-        from : "admin",
-        text: "welcome in chatroom =)",
-        date: datestring
-    })
+    socket.emit('welcome',
+    generateMessage("admin", "welcome in chatroom =)")
+
+    // { 
+    //     from : "admin",
+    //     text: "welcome in chatroom =)",
+    //     date: datestring
+    // }
+)
 
 
     // pipeline between ° client _ server ° 
@@ -56,11 +66,11 @@ io.on('connection', (socket) => {
 
         // add a date to message 
         message.createdAt = datestring
-        // io.emit("newMessage",message)
+        io.emit("newMessage",message)
 
         // broadcast allow to exclude emitter
         // from receive the emit message
-        socket.broadcast.emit("newMessage", message)
+        // socket.broadcast.emit("newMessage", message)
     })
 
     // LISTEN EVENT
