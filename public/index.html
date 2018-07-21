@@ -11,20 +11,7 @@
 
 
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-        // create a connection 
-        // store sockets in a variable
-        // communicatin wit server 
-        const  socket = io();
-        socket.on("connect", () => { 
-                console.log("connected to server");
-        });
-
-        // call
-        socket.on("disconnect", () => { 
-            console.log("Disconnected to server")
-        })
-    </script>
+     <script src="./js/index.js"></script>
 </body>
 
 </html>

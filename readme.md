@@ -5,3 +5,5 @@
 > <script src="/socket.io/socket.io.js"></script>
 
 // persistent connection between server _ client 
+
+// emiting _ listening custom building events

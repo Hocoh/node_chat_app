@@ -28,9 +28,8 @@ const server = http.createServer(app);
 const socketIO = require("socket.io");
 const io = socketIO(server);
 
-// app.get('/', function(req, res){
-//     res.sendFile(__dirname + '/index.html');
-//   });
+// date format 
+var datestring = new Date().toLocaleString(); 
 
 // build in listeners 
 // listen for event 
@@ -39,14 +38,38 @@ io.on('connection', (socket) => {
     // of users 
     console.log('new user connected');
 
+    // LISTEN EVENT
+
     socket.on('disconnect', (socket) => {
         // each socket represent individuals sockets 
         // of users 
         console.log('a user disconnected');
     });
+
+    socket.on("createMessage", function (message) { 
+        console.log("client email", message)
+    })
+ 
+        
+
+    //EMIT EVENT
+
+    // newMessage
+    // parameters 
+        // from, text, timestamp
+    socket.emit("newMessage", { 
+        // fire event
+        from : "localServer",
+        text:"hey, what's up heaven",
+        createAt: datestring
+    })
+    
 });
   
-  
+
+// new email
+
+ 
 
 
 // create express configuration
