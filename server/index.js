@@ -60,13 +60,15 @@ io.on('connection', (socket) => {
 
 
     // pipeline between ° client _ server ° 
-    socket.on("createMessage", function (message) { 
+    socket.on("createMessage",  function (message, callback) { 
         console.log("client email", message)
 
 
         // add a date to message 
         message.createdAt = datestring
         io.emit("newMessage",message)
+
+        callback("Awesome")
 
         // broadcast allow to exclude emitter
         // from receive the emit message

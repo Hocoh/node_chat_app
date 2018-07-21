@@ -24,9 +24,21 @@ socket.on("connect", function () {
 
         socket.on("newMessage", function (message) { 
             console.log("message from local server", message)
+            let li = jQuery("<li></li>"); 
+            li.text(`${message.from}: ${message.text}`);
+
+            jQuery(`#messages`).append(li);
         })  
             
-              
+        // socket.emit("createMessage",{ 
+        //     from : "client",
+        //     text: "Hi"
+        //     }, 
+        //     function (data) { 
+        //     console.log("got it")
+        //     console.log("from server: ", data)
+        // });
+
 });
 
 
@@ -36,6 +48,14 @@ socket.on("disconnect", function (){
 })
 
 
+jQuery("#message-form").on("submit", function (event) { 
+    event.preventDefault();
+    socket.emit("createMessage", { 
+        from:"User",
+        text: jQuery("[name=message]").val()
+    }, function(){ 
 
+    });
+});
 
 
