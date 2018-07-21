@@ -69,15 +69,20 @@ socket.on("connect", function () {
           function success(pos) {
             var crd = pos.coords;
           
-            console.log('Your current position is:');
+            console.log('Votre position actuelle est :');
             console.log(`Latitude : ${crd.latitude}`);
             console.log(`Longitude: ${crd.longitude}`);
-            console.log(`More or less ${crd.accuracy} meters.`);
-          }
+            console.log(`Plus ou moins ${crd.accuracy} mètres.`);
+
+            socket.emit("createMessage", { 
+                from:"User",
+                text: crd
+            })
+          };
           
           function error(err) {
             console.warn(`ERROR(${err.code}): ${err.message}`);
-          }
+          };
           
           navigator.geolocation.getCurrentPosition(success, error, options);
     });
