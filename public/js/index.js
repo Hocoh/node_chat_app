@@ -18,13 +18,6 @@ socket.on("connect", function () {
             console.log("message from local server", message)
         })  
             
-
-        // EMIT 
-
-        socket.emit("createMessage", { 
-            from : "heaven",
-            text: "Hello from heaven", 
-        })
               
 });
 

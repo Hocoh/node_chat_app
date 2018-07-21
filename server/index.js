@@ -38,6 +38,15 @@ io.on('connection', (socket) => {
     // of users 
     console.log('new user connected');
 
+    // pipeline between ° client _ server ° 
+    socket.on("createMessage", function (message) { 
+        console.log("client email", message)
+
+        // add a date to message 
+        message.createdAt = datestring
+        io.emit("newMessage",message)
+    })
+
     // LISTEN EVENT
 
     socket.on('disconnect', (socket) => {
@@ -46,23 +55,9 @@ io.on('connection', (socket) => {
         console.log('a user disconnected');
     });
 
-    socket.on("createMessage", function (message) { 
-        console.log("client email", message)
-    })
- 
+    
         
 
-    //EMIT EVENT
-
-    // newMessage
-    // parameters 
-        // from, text, timestamp
-    socket.emit("newMessage", { 
-        // fire event
-        from : "localServer",
-        text:"hey, what's up heaven",
-        createAt: datestring
-    })
     
 });
   
