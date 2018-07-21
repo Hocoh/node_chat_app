@@ -34,17 +34,33 @@ var datestring = new Date().toLocaleString();
 // build in listeners 
 // listen for event 
 io.on('connection', (socket) => {
-    // each socket represent individuals sockets 
-    // of users 
-    console.log('new user connected');
+    // emmit to all users above the emmiter
+    socket.broadcast.emit("userJoin", { 
+        from: "admin",
+        text: "new user join",
+        date: datestring
+    })
+
+    // event returned exclusively to emmiter 
+    socket.emit('welcome', { 
+        from : "admin",
+        text: "welcome in chatroom =)",
+        date: datestring
+    })
+
 
     // pipeline between ° client _ server ° 
     socket.on("createMessage", function (message) { 
         console.log("client email", message)
 
+
         // add a date to message 
         message.createdAt = datestring
-        io.emit("newMessage",message)
+        // io.emit("newMessage",message)
+
+        // broadcast allow to exclude emitter
+        // from receive the emit message
+        socket.broadcast.emit("newMessage", message)
     })
 
     // LISTEN EVENT

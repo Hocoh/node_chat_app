@@ -14,6 +14,14 @@ socket.on("connect", function () {
         // parameters 
             // from, name,text
           // newMessage listener
+        socket.on("welcome", function (message) { 
+            console.log("message from local server", message)
+        })  
+
+        socket.on("userJoin", function (message) { 
+            console.log("message from local server", message)
+        })  
+
         socket.on("newMessage", function (message) { 
             console.log("message from local server", message)
         })  
