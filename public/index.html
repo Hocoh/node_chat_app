@@ -9,6 +9,7 @@
 </head>
 <body class="chat"> 
 
+
     <div class="chat__sidebar">
         <h3>People</h3>
         <div id="users"></div>
@@ -31,7 +32,33 @@
         </div>
     </div>
 
+    <script id="message-template" type="text/template">
+       <li class="message">
+            <div class="message__title">
+                <h4>{{from}}</h4>
+                <span>{{createdAt}}</span>
+            </div>
+            <div class="message__body">
+                <p>{{text}}</p>
+            </div>
+       </li>
+    </script>
+
+    <script id="location-message-template" type="text/template">
+        <li class="message">
+             <div class="message__title">
+                 <h4>{{from}}</h4>
+                 <span>{{createdAt}}</span>
+             </div>
+             <div class="message__body">
+                 <p> <a href="{{url}}" target="_blank">I'm here</a></p>
+             </div>
+        </li>
+     </script>
+
     <script src="/socket.io/socket.io.js"></script>
+    <script src="./js/unit/moment.js"></script>
+    <script src="./js/unit/mustache.js"></script>
     <script
     src="https://code.jquery.com/jquery-3.3.1.js"
     integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
