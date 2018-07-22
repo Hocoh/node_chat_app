@@ -63,7 +63,7 @@ io.on('connection', (socket) => {
         message.createdAt = datestring
         io.emit("newMessage",message)
 
-        callback("Awesome")
+        callback();
 
         // broadcast allow to exclude emitter
         // from receive the emit message

@@ -37,23 +37,15 @@ socket.on("connect", function () {
             jQuery(`#messages`).append(li);
         })  
             
-        // socket.emit("createMessage",{ 
-        //     from : "client",
-        //     text: "Hi"
-        //     }, 
-        //     function (data) { 
-        //     console.log("got it")
-        //     console.log("from server: ", data)
-        // });
-
+    let messageTextbox = jQuery("[name=message]");
 
     jQuery("#message-form").on("submit", function (event) { 
         event.preventDefault();
         socket.emit("createMessage", { 
             from:"User",
-            text: jQuery("[name=message]").val()
+            text: messageTextbox.val()
         }, function(){ 
-
+            messageTextbox.val("")
         });
     });
 
@@ -63,6 +55,11 @@ socket.on("connect", function () {
             return alert("Geolocation failed on browser")
         }
 
+        locationButton.attr("disabled", "disabled")
+        .text("Sending location...");
+
+        location
+
         var options = {
             enableHighAccuracy: true,
             timeout: 5000,
@@ -70,6 +67,10 @@ socket.on("connect", function () {
           };
           
           function success(pos) {
+
+            locationButton.removeAttr("disabled")
+            .text("Send location");
+
             var crd = pos.coords;
           
             socket.emit("createLocationMessage", { 
