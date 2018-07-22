@@ -10,7 +10,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // units 
-const {generateMessage} =require("./unit/message"); 
+const {generateMessage, generateLocationMessage} =require("./unit/message"); 
 // adding entry for incomine socket. connection 
 // server accept connection
 // client make connection
@@ -38,11 +38,6 @@ io.on('connection', (socket) => {
     // emmit to all users above the emmiter
     socket.broadcast.emit("userJoin",
     generateMessage("admin", "new user join")
-    // { 
-    //     from: "admin",
-    //     text: "new user join",
-    //     date: datestring
-    // }
 )
 
 
@@ -74,6 +69,12 @@ io.on('connection', (socket) => {
         // from receive the emit message
         // socket.broadcast.emit("newMessage", message)
     })
+
+    socket.on("createLocationMessage", (coords)=> { 
+        io.emit(
+            "newLocationMessage",
+            generateLocationMessage("Admin", coords.latitude, coords.longitude))
+    });
 
     // LISTEN EVENT
 

@@ -23,7 +23,10 @@ socket.on("connect", function () {
         })  
 
         socket.on("userJoin", function (message) { 
-            console.log("message from local server", message)
+            let li = jQuery("<li></li>"); 
+            li.text(`${message.from}: ${message.text}`);
+
+            jQuery(`#messages`).append(li);
         })  
 
         socket.on("newMessage", function (message) { 
@@ -69,15 +72,14 @@ socket.on("connect", function () {
           function success(pos) {
             var crd = pos.coords;
           
-            console.log('Votre position actuelle est :');
-            console.log(`Latitude : ${crd.latitude}`);
-            console.log(`Longitude: ${crd.longitude}`);
-            console.log(`Plus ou moins ${crd.accuracy} mètres.`);
-
-            socket.emit("createMessage", { 
-                from:"User",
-                text: crd
-            })
+            socket.emit("createLocationMessage", { 
+                latitude: crd.latitude,
+                longitude: crd.longitude
+            });
+            // console.log('Votre position actuelle est :');
+            // console.log(`Latitude : ${crd.latitude}`);
+            // console.log(`Longitude: ${crd.longitude}`);
+            // console.log(`Plus ou moins ${crd.accuracy} mètres.`);
           };
           
           function error(err) {
@@ -86,6 +88,18 @@ socket.on("connect", function () {
           
           navigator.geolocation.getCurrentPosition(success, error, options);
     });
+
+    socket.on("newLocationMessage", function(message) { 
+
+        let li = jQuery("<li></li>"); 
+        let a = jQuery("<a target='_blank'>My current location </a>");
+
+
+        li.text(`${message.from}:`);
+        a.attr("href", message.url);
+        li.append(a);
+        jQuery("#messages").append(li); 
+    })
 });
 
 
