@@ -11,14 +11,9 @@ const port = process.env.PORT || 3000;
 
 // units 
 const {generateMessage, generateLocationMessage} =require("./unit/message"); 
-// adding entry for incomine socket. connection 
-// server accept connection
-// client make connection
-// enhance persisting connection
-// send data from °client _ server°
-// > use manuall http 
-// > configure express to use http server
-// > connect bunch to socket.io support 
+const {isRealString} = require("./unit/validation");
+const {Users} = require("./unit/users")
+
 
 // ### const io= require("socket.io")(http); ##
 const server = http.createServer(app);
@@ -28,37 +23,49 @@ const server = http.createServer(app);
 // allow to communicate wit client _ receive connections 
 const socketIO = require("socket.io");
 const io = socketIO(server);
+let users = new Users(); 
 
 // date format 
-var datestring = new Date().toLocaleString(); 
+const datestring = new Date().toLocaleString(); 
 
 // build in listeners 
 // listen for event 
 io.on('connection', (socket) => {
-    // emmit to all users above the emmiter
-    socket.broadcast.emit("userJoin",
-    generateMessage("admin", "new user join")
-)
-
-
-
-    // event returned exclusively to emmiter 
-    socket.emit('welcome',
-    generateMessage("admin", "welcome in chatroom =)")
 
     // { 
     //     from : "admin",
     //     text: "welcome in chatroom =)",
     //     date: datestring
     // }
-)
+
+
+    socket.on("join", (params, callback) => { 
+        if (!isRealString(params.name) || !isRealString(params.room)){ 
+          return  callback(" °Name _ room° name required") 
+        }
+
+        socket.join(params.room);
+        users.removeUser(socket.id)     
+        users.addUser(socket.id, params.name, params.room);
+
+        io.to(params.room).emit("updateUserList", users.getUserList(params.room)); 
+        // event returned exclusively to emmiter 
+        socket.emit('welcome',
+                    generateMessage("admin", "welcome in chatroom =)"));
+       
+        // socket.leave
+        // emmit to all users above the emmiter
+        socket.broadcast.to(params.room).emit("userJoin",
+        generateMessage("admin", ` ${params.name} join`));
+        
+        
+ 
+        callback();
+    });
 
 
     // pipeline between ° client _ server ° 
     socket.on("createMessage",  function (message, callback) { 
-        console.log("client email", message)
-
-
         // add a date to message 
         message.createdAt = datestring
         io.emit("newMessage",message)
@@ -78,20 +85,22 @@ io.on('connection', (socket) => {
 
     // LISTEN EVENT
 
-    socket.on('disconnect', (socket) => {
+    socket.on('disconnect', () => {
         // each socket represent individuals sockets 
         // of users 
-        console.log('a user disconnected');
-    });
+        let user = users.removeUser(socket.id); 
+        console.log(`${user.name} has disconnected`)
+        if(user){ 
 
-    
-        
+            // update user list
+            io.to(user.room).emit("updateUserList", users.getUserList(user.room));
 
-    
+            // inform user's room someone leave
+            io.to(user.room).emit("newMessage", generateMessage("Admin",
+            `${user.name} has left`));
+        }
+    });    
 });
-  
-
-// new email
 
  
 

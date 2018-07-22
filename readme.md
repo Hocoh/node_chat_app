@@ -17,3 +17,5 @@
 // message form
 
 // geolocation
+
+// storing users with ES6 classes 
